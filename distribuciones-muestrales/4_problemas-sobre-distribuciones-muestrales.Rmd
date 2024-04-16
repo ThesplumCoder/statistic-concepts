@@ -1,0 +1,65 @@
+---
+title: "Problemas Walpole"
+author: "Anderson Acuña"
+date: "23/2/2024"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Ejercicio 8.18
+
+Sacamos los datos:
+$$
+\sigma_{\overline{X}}=2,\ n=36
+$$
+Usando el TLC
+$$
+\sigma_{\overline{X}}=\frac{\sigma}{\sqrt{n}}\\
+2=\frac{\sigma}{6} \rightarrow \sigma = 12\\
+$$
+Si $\sigma_{\overline{X}}=1.2$:
+$$
+1.2=\frac{12}{\sqrt{n}}\\
+\sqrt{n}=\frac{12}{1.2}\\
+n=\frac{144}{1.44} \rightarrow n = 100
+$$
+Se debe aumentar a 100 el tamaño de la muestra.
+
+## Ejercicio 8.29
+Teniendo en cuenta que $A=terrier$ y $B=poodle$, sacamos los datos:
+$$
+\mu_A=72,\ \sigma_A=10,\ n=64\\
+\mu_B=28,\ \sigma_B=5,\ n=100\\
+P(\overline{X}_A - \overline{X}_B \leqslant 44.2)=?
+$$
+Usamos el siguiente estadístico:
+$$
+Z=\frac{(\overline{X}_A - \overline{X}_B)-(\mu_A - \mu_B)}{\sqrt{\frac{\sigma^2_A}{n_A}+\frac{\sigma^2_B}{n_B}}}\\
+Z=\frac{44.2-44}{\sqrt{1.5625+0.25}}\\
+Z=\frac{0.2}{1.346291} \rightarrow Z = 0.1485563
+$$
+Verificamos su propabilidad acumulada:
+```{r}
+prob = pnorm(0.1485563, lower.tail = TRUE)
+paste("Probabilidad:", prob)
+```
+Hay una probabilidad del $0.559$ de que exceda la media muestral de los terriers a la de los poodles.
+
+## Ejercicio 8.42
+Teniendo en cuenta que $A=terrier$ y $B=poodle$, sacamos los datos:
+$$
+\mu=74,\ \sigma^2=8\\
+n=20,\ s^2=20
+$$
+Utilizamos el estadístico Chi-cuadrado:
+$$
+\chi^2=\frac{(n-1)S^2}{\sigma^2}\\
+\chi^2=\frac{(19)(20)}{8}\\
+\chi^2=\frac{380}{8} \rightarrow \chi^2 = 47.5
+$$
+
+
+

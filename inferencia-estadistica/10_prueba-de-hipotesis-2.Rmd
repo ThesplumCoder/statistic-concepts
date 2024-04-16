@@ -1,0 +1,117 @@
+---
+title: "Prueba de Hipotesis - Parte 2"
+author: "Anderson Acuña"
+date: "2024-04-05"
+output: 
+  html_document: 
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Valor P
+**Ejemplo:** Sea el lanzamiento de una moneda justa...
+Utilizamos la aproximación de la binomial con la normal.
+$$
+\mu_p = np = 50 \\
+\sigma_p = \sqrt{npq} = 5
+$$
+```{r}
+curve(dnorm(x, mean = 50, sd = 5), from = 20, to = 80, col = 'blue', main = 'Aproximación normal de los lanzamientos con sus límites', ylab = 'Densidad de probabilidad', xlab = 'Lanzamientos')
+abline(v = 40)
+abline(v = 60)
+abline(v = 53, col = 'red')
+```
+
+*¿Cuál es el valor mínimo de significancia para rechazar $H_o$?*
+Como es una prueba de dos colas debemos mover la cola inferior y superior la misma distancia. MOvemos el valor crítico de la cola superior para que sea igual al valor de nuestro estadístico, es decir, movemos 7 unidades hacia abajo la cola superior y hacia arriba la cola inferior.
+```{r}
+p_value = pnorm(47, mean = 50, sd = 5, lower.tail = TRUE) + pnorm(53, mean = 50, sd = 5, lower.tail = FALSE)
+```
+El nivel de significancia mínimo es $P_{valor} = `r p_value`$.
+
+## Media muestral y desviación conocida
+
+**Ejercicio:** 
+Extraemos los datos de la muestra.
+```{r}
+fluorescent_bulbs_amount = 100
+fluorescent_bulbs_mean = 1570
+fluorescent_bulbs_deviation = 120
+```
+
+Hay que probar:
+$$
+H_0 : \mu = 1600 [horas] \\
+H_1 : \mu \neq 1600 [horas]
+$$
+
+```{r}
+h0_mean = 1600
+```
+
+
+*Inciso a*: $\alpha = 0.05$.
+```{r}
+
+significance = 0.05
+
+upper_limit = qnorm(p = significance / 2, lower.tail = FALSE)
+lower_limit = qnorm(p = significance / 2, lower.tail = TRUE)
+
+statistic_z = (fluorescent_bulbs_mean - h0_mean) / (fluorescent_bulbs_deviation / sqrt(fluorescent_bulbs_amount))
+
+curve(dnorm(x), from = -5, to = 5, col = 'blue')
+abline(v = c(upper_limit, lower_limit))
+abline(v = statistic_z, col = 'red')
+
+```
+
+Como vemos, el estadístico $Z$ cae en la región de rechazo. Si queremos trabajar con los datos del problema y no con la distribución estándar tenemos que ajustarlos.
+```{r}
+# fbulbs: Fluorescent bulbs.
+fbulbs_upper_limit = h0_mean + upper_limit * (fluorescent_bulbs_deviation / sqrt(fluorescent_bulbs_amount))
+fbulbs_lower_limit = h0_mean - upper_limit * (fluorescent_bulbs_deviation / sqrt(fluorescent_bulbs_amount))
+
+curve(dnorm(x, mean = 1600, sd = (fluorescent_bulbs_deviation / sqrt(fluorescent_bulbs_amount))), from = 1550, to = 1650, col = 'blue')
+abline(v = c(fbulbs_upper_limit, fbulbs_lower_limit))
+abline(v = fluorescent_bulbs_mean, col = 'red')
+```
+
+## Proporciones
+Se aproxima con una distribución normal así:
+$$
+\hat{p} = \frac{X}{n} \\
+\mu_{\hat{p}} = p_0 \\
+\sigma_{\hat{p}} = \sqrt{p_0(1 - p_0)/n}
+$$
+
+**Ejercicio:** El fabricante de una medicina de patente afirmó que la misma fue 90% eficaz para aliviar una alergia durante un periodo de 8 horas. En una muestra de 200 personas ue padecían la alergia, la medicina proporcionó alivio a 160 personas.
+
+a. Determinar si la afirmación del fabricante es legítima con base en un nivel de significancia de 0.01.
+b. Encontrar el valor P de la prueba.
+
+*Inciso a:* Planteamos la hipótesis nula.
+$$
+H_0 : p = 0.9 \\
+H_1 : p < 0.9
+$$
+
+```{r}
+p_0 = 0.9
+p_hat = 160 / 200
+significance = 0.01
+
+# statistic_z_prop: Statistic Z for proportions.
+statistic_z_prop = (p_hat - p_0) / sqrt(p_0 * (1 - p_0) / 200)
+
+limit = qnorm(p = significance, mean = p_0, sd = sqrt(p_0 * (1 - p_0) / 200))
+p_value = pnorm(q = p_hat, mean = p_0, sd = sqrt(p_0 * (1 - p_0) / 200))
+
+curve(dnorm(x, mean = p_0, sd = sqrt(p_0 * (1 - p_0) / 200)), from = 0.5, to = 1, col = 'blue')
+abline(v = limit)
+abline(v = p_hat, col = 'red')
+```   
+

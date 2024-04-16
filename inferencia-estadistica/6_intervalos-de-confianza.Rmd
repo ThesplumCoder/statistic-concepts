@@ -1,0 +1,85 @@
+---
+title: "Intervalos de confianza"
+author: "Anderson Acuña"
+date: "2024-03-07"
+output: 
+  html_document: 
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intervalos de confianza para la varianza
+$$
+\frac{(n - 1)s^2}{\chi^2_{\alpha /2}} < \sigma^2 < \frac{(n - 1)s^2}{\chi^2_{1 - \frac{\alpha}{2}}}
+$$
+**Ejemplo:** Los siguientes son los pesos, en decagramos, de 10 paquetes de semillas de pasto distribuidas por cierta empresa:
+```{r}
+data_seeds = c(46.4, 46.1, 45.8, 47.0, 46.1, 45.9, 45.8, 46.9, 45.2, 46.0)
+
+x_bar_seeds = sum(data_seeds) / length(data_seeds)
+s_2_seeds = sum((data_seeds - x_bar_seeds)**2) / length(data_seeds)
+```
+Sacamos los valores cuantiles de la distribución chi-cuadrada.
+$$
+\chi^2_{0.975} = 2.7 \\
+\chi^2_{0.025} = 19.023
+$$
+Construímos el intervalo.
+$$
+\frac{9(0.286)}{19.023} < \sigma^2 < \frac{9(0.286)}{2.7} \\
+0.135 < \sigma^2 < 0.953
+$$
+```{r}
+plot(c(0.135, 0.286, 0.953), c(0 , 0, 0), xlab = "Valores extremos del intervalo de confianza")
+```
+
+## Estimación de proporción de 2 varianzas
+$$
+\frac{s^2_1}{s^2_2} \frac{1}{f_{\alpha / 2}(v_1, v_2)} < \frac{\sigma^2_1}{\sigma^2_2} < \frac{s^2_1}{s^2_2} f_{\alpha / 2}(v_2, v_1)
+$$
+
+**Ejemplo:** Se extraen de manera aleatoria dos muestras de tamaño 16 y 10, respectivamente, de dos poblaciones normales. Si se encuentra que sus varianzas son de 24 y 18, respectivamente, encontrar los límites de confianza para *a)*98%  *b)*90% para la razón, o cociente, de las varianzas.
+```{r}
+n_1 = 16
+n_2 = 10
+s_2_1 = 24
+s_2_2 = 18
+
+v_1 = n_1 - 1
+v_2 = n_2 - 1
+alpha = 1 - 0.90
+
+f_v1_v2 = qf(alpha / 2, df1 = v_1, df2 = v_2)
+f_v2_v1 = qf(alpha / 2, df1 = v_2, df2 = v_1)
+s2_proportion = s_2_1 / s_2_2
+
+ll = s2_proportion * 1 / f_v1_v2
+ul = s2_proportion * f_v2_v1
+```
+
+```{r}
+plot(c(ll, s2_proportion, ul), c(0, 0, 0), xlab = "Límites del intervalo de confianza")
+```
+
+Como vemos el intervalo de confianza tiene un límite inferior que implica $s^2_1 < s^2_2$, mientras que, tiene un límite superior que implica $s^2_1 > s^2_2$; por lo tanto, no podemos asegurar con certeza si una es mayor que otra.
+
+# Estimación de máxima verosimilitud
+Se usa para conocer los parámetros de una distribución conocida.
+
+Si tenemos una variable aleatoria $X = \{x_1, x_2, ..., x_n\}$, y su función de probabilidad es $f_{(x_i,\ \theta)}$, el estimador de máxima verosimilitud es:
+$$
+L(\theta) = f_{(x_1,\ \theta)}f_{(x_2,\ \theta)}...f_{(x_n,\ \theta)}
+$$
+Para maximixarlo debemos derivar.
+
+**Ejemplo:**
+$$
+x_1 = éxito,\ x_2 = éxito,\ x_3 = fracaso \\
+L(p) = p * p * (1 - p) \\
+FALTA
+$$
+
+> Sea una muestra de k ensayos de Bernoulli, con m éxito y k-m fracaso. Calcule función de máxima verosimilitud y estimador de máxima verosimilitud.

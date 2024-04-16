@@ -1,0 +1,116 @@
+---
+title: "Prueba de Hipótesis - Parte 3"
+author: "Anderson Acuña"
+date: "2024-04-11"
+output: 
+  html_document: 
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Prueba de hipótesis sobre la varianza
+
+**Ejercicio:** En el pasado, la desviación estándar de los pesos de ciertos paquetes de 40 onzas que e llenaban mediante un máquina era de 0.25 onzas...
+$$
+H_0:\sigma = 0.25 \\
+H_1:\sigma > 0.25
+$$
+
+```{r}
+# Valor de la hipótesis nula.
+population_deviation = 0.25
+
+sample_deviation = 0.32
+n = 20
+sample_mean = 40
+
+statistical_chi = (n - 1) * (sample_deviation ** 2) / (population_deviation **2)
+p_value = dchisq(statistical_chi, df = n-1)
+```
+Sea el estadístico $\chi^2 = `r statistical_chi`$ y $P_{valor} = `r p_value`$.
+
+# Comparación de medias
+Para el caso de una muestra grande con una desviación estándar conocida, se defina la prueba así:
+$$
+H_0: \mu_1 = \mu_2
+$$
+
+
+**Ejercicio:** Se aplicó un exámen a dos grupos de estudiantes, el primero con 40 y el segundo con 50 estudiantes. En el primer grupo, la calificación media fue de 74 con una desviación estándar de 8; mientras que, el segundo tenía una calificación media 78 y una desviación estándar de 7. ¿Hay diferencia significativa entre el desempeño de las dos clases a un nivel de significancia de a)0.05, b)0.01? c)¿Cuál es el valor P de la prueba?
+$$
+H_0: \mu_1 = \mu_2 \\
+H_1: \mu_1 \neq \mu_2 \\
+\alpha = 0.05
+$$
+
+```{r}
+significance = 0.05
+
+# pop: population, sam: sample.
+students1 = 40
+students1_pop_deviation = 8
+students1_sam_mean = 74
+students2 = 50
+students2_pob_deviation = 7
+students2_sam_mean = 78
+
+students1_sam_deviation = students1_pop_deviation / sqrt(students1)
+students2_sam_deviation = students2_pob_deviation / sqrt(students2)
+
+statistical_z = (students1_sam_mean - students2_sam_mean) / sqrt(students1_sam_deviation + students2_sam_deviation)
+```
+
+El estadístico $Z = `r statistical_z`$. Visualmente:
+```{r}
+curve(dnorm(x), from = -3, to = 3, col = 'blue', xlab = 'Valor cuantil', ylab = 'Densidad de probabilidad', main = 'Distribución normal para Z')
+abline(v = c(qnorm(p = significance/2), qnorm(p = significance/2, lower.tail = FALSE)))
+abline(v = statistical_z, col = 'red')
+```
+
+## Diferencia de medias en muestras pareadas
+
+**Ejercicio:** En un estudio realizado en el Departamento de Silvicultura y Fauna de Virginia Tech, J. A.Wesson examinó la influencia del fármaco sucinilcolina sobre los niveles de circulación de andrógenos en la sangre. Se obtuvieron muestras de sangre de venados...
+
+Solo se tomaron los datos de las diferencias.
+```{r}
+significance = 0.05
+difference_androgenos = c(4.26, -2.08, 2.76, 0.94, 1.11, 3.21, 7.31, 13.74, 0.52, -2.45, -0.68, -0.16, 68.03, 26.55, 24.66)
+deer_amount = length(difference_androgenos)
+difference_mean = mean(difference_androgenos)
+difference_deviation = sd(difference_androgenos)
+
+statistical_T = difference_mean / (difference_deviation / sqrt(deer_amount))
+p_value = pt(statistical_T, df = deer_amount - 1, lower.tail = FALSE) + pt(-statistical_T, df = deer_amount - 1, lower.tail = TRUE)
+```
+El estadístico $T = `r statistical_T`$ y $P_{valor} = `r p_value`$.
+
+```{r}
+curve(dt(x, df = deer_amount - 1), from = -3, to = 3, col = 'blue', xlab = 'Valor cuantil', ylab = 'Densidad de probabilidad', main = 'Distribución t-student para T')
+abline(v = c(qt(p = significance/2, df = deer_amount - 1, lower.tail = TRUE), qt(p = significance/2, df = deer_amount - 1, lower.tail = FALSE)))
+abline(v = statistical_T, col = 'red')
+```
+
+*Conclusión:* A un nivel de significancia de 0.05, no podemos ecir que la inyección de sucinilcolina tuvo algún cambio significativo en la cantidad de andrógenos en sangre.
+
+# Prueba de hipótesis sobre la varianza de dos poblaciones (Distribución F)
+
+**Ejercicio:**
+$$
+H_0: \sigma^2_B = \sigma^2_A \\
+H_1: \sigma^2_B > \sigma^2_A
+$$
+
+```{r}
+sizeA = 16
+sample_deviation_A = 9
+sizeB = 25
+sample_deviation_B = 12
+
+statistical_F = (max(sample_deviation_B, sample_deviation_A) / min(sample_deviation_B, sample_deviation_A)) ** 2
+```
+
+El estadístico queda $F = `r statistical_F`$. Buscamos $F_{v_B = 24, v_A = 15, \alpha = 0.05} = 2.29$; por lo tanto, no podemos rechazar la hipótesis nula.
+

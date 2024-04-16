@@ -1,0 +1,148 @@
+---
+title: 'Inferencia Estadística: Estimadores'
+author: "Anderson Acuña"
+date: "2024-02-29"
+output: 
+  html_document: 
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Estimadores Puntuales
+Son valores numéricos que podemos calcular de na muestra, para poder estimar un parámetro poblacional. No se espera que los estimadores puntuales sean exactamente el mismo valor del parámetro poblacional, solo que estén muy cerca.
+
+### Estimador Insesgado
+Si realizamos el proceso de estimar puntualmente un parámetro varias veces y sacamos la media de esos valores debería ser exactamente igual al valor de la población.
+$$
+\mu_\Theta =\mu
+$$
+
+Para la media poblacional $\mu$ podemos usar $\overline{X}$, la moda y la mediana son estimadores insesgados; pero el **más eficiente** es la media muestral.
+
+## Estimación por Intervalos
+Es un intervalo para un estimación de algún parámetro, que se centra en la estimación puntual obtenida a través de la muestra con un valor superior y uno inferior.
+$$
+\Theta_L < \Theta < \Theta_U
+$$
+En general, estos intervalos vienen acompañados de una probabilidad que nos dice qué tan confiable es nuestro proceso de estimación. Cuando juntamos todo esto obtenemos un **intervalo de confianza**.
+
+## Intervalos de Confianza
+
+### Para medias
+Para esto usamos la distribución normal y la siguiente construcción:
+$$
+\overline{x}-Z_{\alpha/2} \frac{\sigma}{\sqrt{n}} < \mu < \overline{x} + Z_{\alpha/2}\frac{\sigma}{\sqrt{n}}
+$$
+
+Otra aplicación podría ser el cálculo del **tamaño de la muestra** para poder asegurar cierto nivel de confianza ó cierto nivel de error $e$.
+$$
+n=(\frac{Z_{\alpha/2}\sigma}{2e})^2
+$$
+> Cuando obtenemos un tamaño de muestra con parte real debemos aproximar al entero superior más cercano, para asegurar que nuestro error sea siempre menor que el objetivo.
+
+## Error estándar de un estimación puntual
+Se utiliza:
+$$
+\sigma_{\overline{X}}=\frac{\sigma}{\sqrt{n}}
+$$
+
+## Intervalos de Confianza Unilaterales
+En ocasiones solo estamos interesados en si nuestro proceso supera o es menor de cierto valor, para estos casos se utiliza:
+$$
+FALTA
+$$
+
+**Ejemplo:** En un experimento de pruebas psicológicas se seleccionan...
+
+Extraemos los datos.
+$$
+\alpha = 0.5,\ \overline{X}=6.2,\ n = 25,\ \sigma^2 = 4
+$$
+Calculamos el límite superior:
+$$
+LU: Limit\ Upper\\
+LU = \overline{x} + Z_{\alpha} \frac{\sigma}{\sqrt{n}} \\
+LU = 6.2 + Z_{0.05} \frac{2}{5} \leftarrow Z_{0.05} = 1.64\\
+LU = 6.856
+$$
+Concluimos que el **tiempo medio de reacción** es menor a 6.856 con un 95% de confiabilidad. Hacemos una gráfica de las distribuciones:
+```{r}
+var_poblacional = 4
+x_muestral = 6.2
+
+curve(dnorm(x, mean = x_muestral, sd = sqrt(var_poblacional)), from = 0, to = 12, ylim = c(0,1), col = "blue")
+curve(dnorm(x, mean = x_muestral, sd = sqrt(var_poblacional)/sqrt(25)), col = "orange", add = TRUE)
+```
+
+## Intervalos de Confianza con desviación estándar desconocida
+
+Cuando no conocemos el valor de la desviación estándar poblacional hacemos uso de la distribución t de Student para definir el intervalo.
+$$
+\overline{x} - t_{\alpha/2} \frac{s}{\sqrt{n}} <  \mu < \overline{x}  + t_{\alpha/2} \frac{s}{\sqrt{n}}
+$$
+
+**Ejemplo:** El contenido de ácido sulfúrico de 7 contenedores similares es de 9.8, 10.2, 10.4, 9.8, 10.0, 10.2 y 9.6 litros. Calcule un intervalo de confianza de 95% para el contenido promedio de todos los contenedores suponiendo una distribución aproximadamente normal.
+
+Extraemos los datos
+```{r}
+h2so4_containers = c(9.8, 10.2, 10.4, 9.8, 10.0, 10.2, 9.6)
+alpha = 1 - 0.95
+deg_freedom = length(h2so4_containers) - 1
+
+mean_containers = mean(h2so4_containers)
+std_containers = sd(h2so4_containers)
+```
+
+Calculamos los limites.
+```{r}
+lu = mean_containers + qt(p = alpha/2, df = deg_freedom, lower.tail = FALSE) * std_containers / sqrt(length(h2so4_containers))
+ll = mean_containers + qt(p = alpha/2, df = deg_freedom, lower.tail = TRUE) * std_containers / sqrt(length(h2so4_containers))
+
+print(paste("Límite superior:", lu))
+print(paste("Límite inferior:", ll))
+```
+
+El contenido promedio de ácido sulfúrico está entre $[9.73841411992511,\ 10.2615858800749]$ con un 95% de probabilidad.
+
+## Intervalos de Confianza para Diferencia o Suma de Medias
+
+Utilizado sobre **dos poblaciones** cuando queremos saber la diferencia o suma entre sus medias y a su vez definir un intervalo de confianza.
+$$
+(\overline{X}_1 - \overline{X}_2) - Z_{\alpha /2}\sigma_{\overline{X}_1 - \overline{X}_2} < \mu_1 - \mu_2 < (\overline{X}_1 - \overline{X}_2) + Z_{\alpha /2}\sigma_{\overline{X}_1 - \overline{X}_2}
+$$
+
+**Ejemplo:** Se llevó a cabo un experimento donde se compararon dos tipos de motores...
+$$
+\overline{X}_A = 36,\ n_A = 50,\ \sigma_A = 6 \\
+\overline{X}_B = 42,\ n_A = 75,\ \sigma_A = 8
+$$
+Empezamos la construcción del intervalo con un 96% de confiabilidad.
+$$
+Z_{\alpha /2} = Z_{0.02} = 2.05 \\
+\sigma_{\overline{X}_A - \overline{X}_B} = \sqrt{\frac{6^2}{50} + \frac{8^2}{75}} \\
+\sigma_{\overline{X}_A - \overline{X}_B} = 1.254 \\
+6 - 2.05(1.254) < \mu_1 - \mu_2 < 6 + 2.05(1.254) \\
+3.4293 < \mu_1 - \mu_2 < 8.5707
+$$
+
+El rendimiento promedio para el motor B es entre 3.4293 y 8.5707 millas más que el del motor A con un 96% de confiabilidad.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

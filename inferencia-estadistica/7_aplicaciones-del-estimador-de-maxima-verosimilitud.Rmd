@@ -1,0 +1,94 @@
+---
+title: "Aplicaciones del Estimador de Máxima Verosimilitud"
+author: "Anderson Acuña"
+date: "2024-03-08"
+output: 
+  html_document: 
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Estimadores en funciones de probabilidad arbitrarias
+
+**Ejercicio 1:** 
+
+```{r}
+distribution_function <- function (k, x) {
+  res = (k + 1) * (x ** k)
+  return(res)
+}
+```
+
+```{r}
+curve(distribution_function(k = 0.5, x), from = 0, to = 1, ylab = "Probabilidad")
+```
+
+Función de verosimilitud.
+$$
+L(k) = (k + 1) x^k_1(k + 1) x^k_2...(k + 1) x^k_n \\
+L(k) = (k + 1)^n \prod^n_{i = 1} x^k_i \\
+log(L(k)) = log((k + 1)^n) + log(\prod^n_{i = 1} x^k_i) \\
+log(L(k)) = n(log(k + 1)) + k(\sum^n_{i = 1} log(x_i)) \\
+\frac{d}{dk}(log(L(k)) = n\frac{1}{k + 1} + \sum^n_{i = 1} log(x_i) \\
+$$
+
+Si optimizamos queremos $\frac{d}{dk}(log(L(k)) = 0$.
+$$
+\frac{n}{k + 1} = \sum^n_{i = 1} log(x_i) \\
+k_{óptimo} = - \frac{n}{\sum^n_{i = 1} log(x_i)} - 1
+$$
+
+Aplicamos este estimador a un conjunto de datos.
+```{r}
+data3 = read.csv(file = "/cloud/project/Apuntes/deromob_datos3.csv")
+```
+
+```{r}
+optimize_k <- function(all_data) {
+  k = - ((length(all_data$x)) / sum(log10(all_data$x))) - 1
+  return(k)
+}
+
+found_k = optimize_k(all_data = data3)
+```
+
+```{r}
+curve(distribution_function(k = found_k, x), from = 0, to = 1)
+```
+
+```{r}
+hist(data3$x, freq = FALSE, xlab = "Datos del dataframe 3")
+```
+
+## Estimador de máxima verosimilitud para distribución de Poisson
+Recordando la función masa de probabilidad:
+$$
+f_{(x, \mu)} = \frac{e^{-\mu} \mu^x}{x!},\ x = 0,1,2,...
+$$
+Sea $\hat{\mu}$ el parámetro de la distribución...
+FALTA
+
+**Ejercicio:** Atlético Madrid.
+```{r}
+number_weeks = c(30, 56, 40, 16, 4, 5, 1, 0, 0)
+
+data_goals = c()
+for(week in 1:length(number_weeks)) {
+  data_goals = c(data_goals, seq(from = week - 1, by = 0, length.out = number_weeks[week]))
+}
+
+# Estimador
+emv = mean(data_goals)
+```
+
+```{r}
+plot(dpois(0:8, lambda = emv))
+# Histograma
+plot(x = 0:8, y = number_weeks/152, type = "h")
+```
+
+
+

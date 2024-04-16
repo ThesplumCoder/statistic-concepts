@@ -1,0 +1,31 @@
+---
+title: "Distribución Normal"
+output: 
+  html_notebook: 
+    toc: yes
+---
+
+# Conceptos Básicos
+
+## Temas
+1. Distribución media muestral
+2. Teorema del límite central
+3. Distribución normal.
+
+## Parámetros poblacionales
+Para esto se designan:
++ $\mu$
++ $\sigma$
++ $\sigma^2$
+
+## Parámetros muestrales
++ $\overline{x}$
++ $s$
++ $s^2$
+
+**Ejercicio:** Una empresa de material eléctrico fabrica bombillas que tienen una duración que se distribuye aproximadamente en forma normal, con media de 800 horas y desviación estándar de 40 horas. Calcule la probabilidad de que una muestra aleatoria de 16 bombillas tenga una vida media de de menos de 775 horas.
+$$\mu = 800\ horas,\ \sigma = 40\ horas$$
+$$Z = \frac{775 - 800}{40}=-0.625 \\
+P(Z<-0.625)=
+$$
+> No terminado.

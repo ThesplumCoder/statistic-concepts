@@ -1,0 +1,129 @@
+---
+title: "Prueba de Hipótesis - Parte 3"
+author: "Anderson Acuña"
+date: "2024-04-12"
+output: 
+  html_document: 
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Prueba de bondad de ajuste - Test $\chi^2$
+Sea las hipótesis:
+$$
+H_0: (x_1, x_2, ..., x_n) \sim Distribución\ D
+$$
+
+
+Valor crítico:
+$$
+\chi^2_{v, \alpha}
+$$
+
+> Los grados de libertad son la cantidad de particiones menos 1.
+
+**Ejercicio:** Muertes por patadas de caballo. Ajuste una distribución de Poisson.
+```{r}
+frequencies = c(109, 65, 22, 3, 1)
+kicks = c(0, 1, 2, 3, 4)
+
+lambda_data = 0.61
+plot(x = kicks, y = frequencies / sum(frequencies), type = 'h', col = 'blue')
+lines(x = kicks, y = dpois(kicks, lambda = lambda_data))
+
+expected = dpois(0:4, lambda = lambda_data)*200
+statistical_X = sum(((frequencies - expected)**2) / expected)
+```
+
+Calculamos el valor crítico $\chi^2_{v = 5 - 1, \alpha = 0.05} = 9.488$:
+```{r}
+critic_value = qpois(p = 0.05, lambda = lambda_data, lower.tail = FALSE)
+```
+
+**Ejercicio:** Considere el lanzamienot de un dado. Si es legal la distribución de las caras debería ser:
+$$
+f_{(x)} = \frac{1}{6}, x = \{1, 2, 3, 4, 5, 6 \}
+$$
+
+Entonces los datos deberían 
+
+```{r}
+significance = 0.01
+observed_faces = c(20, 22, 17, 18, 19, 24)
+expected_faces = c(20, 20, 20, 20, 20, 20)
+
+statistical_X = sum(((observed_faces - expected_faces) ** 2) / expected_faces)
+critic_value = qchisq(p = 0.01, df = 5, lower.tail = FALSE)
+
+# Datos
+plot(x = c( 1, 2, 3, 4, 5, 6), y = observed_faces, type = 'h', col = 'blue')
+
+# Prueba de bondad
+curve(dchisq(x, df = 5), from = 0, to = 16, col = 'blue')
+```
+
+**Ejercicio:** En sus experimentos con chícharos, Mendel observó 315 redondos y amarillos, 108 redondos y verdes, 101 arrugados y amarillos, y 32 arrugados y verdes. De acuerdo con su toería de la herencia, los números deben estar en la proporción 9:3:3:1. Calcule el valor P de la prueba.
+
+Dividimos las clases de chícharos por números, entonces:
+
+1. Redondos y amarillos.
+2. Redondos y verdes.
+3. Arrugados y amarillos.
+4. Arrugados y verdes.
+
+```{r}
+peas_observed = c(315, 108, 101, 32)
+total = sum(peas_observed)
+peas_expected = c(total * 9/16, total * 3/16, total * 3/16, total * 1/16)
+
+plot(x = c(1, 2, 3, 4), y = peas_observed, type = 'h', col = 'blue', xlab = 'Clasificación del chícharo', ylab = 'Cantidad de chícharos', main = 'Comparación cantidad de chícharos esperados vs. observados')
+lines(x = c(1, 2, 3, 4), y = peas_expected, col = 'red')
+
+peas_statistical_X = sum(((peas_observed - peas_expected)**2) / peas_expected)
+peas_P_value = pchisq(q = peas_statistical_X, df = 3, lower.tail = FALSE)
+```
+
+El estadístico para los chícharos sería $\chi^2 = `r peas_statistical_X`$ y $P_{valor} = `r peas_P_value`$.
+
+## Prueba de independencia
+
+Se intenta probar que:
+$$
+H_0: Variables\ son\ independientes \\
+H_1: Variables\ son\ dependientes
+$$
+
+
+**Ejercicio:** Se plantea una reforma fiscal y se encuesta a diferentes personas si están en contra o a favor, se le categoriza por nivel de ingreso. Se quiere saber si hay dependencia entre el nivel de ingreso y su opinión con respecto a la reforma fiscal.
+
+Sean los datos:
+```{r}
+inFavor = c(182, 213)
+```
+
+Se calculan los datos esperados:
+
+|           	| Bajo    	| Medio   	| Alto    	| Totales 	|
+|-----------	|---------	|---------	|---------	|---------	|
+| A favor   	| 200.928 	| 209.898 	| 187.174 	| 598     	|
+| En contra 	| 135.072 	| 141.102 	| 125.826 	| 402     	|
+| Totales   	| 336     	| 351     	| 313     	| 1000    	|
+
+```{r}
+opinions_proportion = c(598 / 1000, 402 / 1000)
+opinions_expected = c(336 * opinions_proportion, 351 * opinions_proportion, 313 * opinions_proportion)
+opinions_observed = c(182, 213, 203, 154, 138, 110)
+
+statistical_X = sum(((opinions_observed - opinions_expected)**2) / opinions_expected)
+
+opinion_rows = 2
+opinion_columns = 3
+freedom_degrees = (opinion_rows - 1) * (opinion_columns - 1)
+opinions_critical_value = qchisq(p = 0.05, df = freedom_degrees)
+```
+
+
+

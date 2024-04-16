@@ -1,0 +1,102 @@
+---
+title: "Ejercicios Estimación y Intervalos de Confianza"
+author: "Anderson Acuña"
+date: "2024-03-14"
+output: 
+  html_document: 
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejercicio 9.4
+Extraemos los datos.
+$$
+n = 50,\ \overline{X} = 174.5,\ s = 6.9
+$$
+```{r}
+n = 50
+sample_mean = 174.5
+sample_deviation = 6.9
+```
+
+## Inciso a
+Intervalo de confianza con un nivel de confiabilidad del 98%.
+```{r}
+confidence = 0.98
+significance = 1 - confidence
+
+upper_limit = sample_mean + qt(p = significance/2, df = n - 1, lower.tail = FALSE) * (sample_deviation / sqrt(n))
+lower_limit = sample_mean - qt(p = significance/2, df = n - 1, lower.tail = FALSE) * (sample_deviation / sqrt(n))
+print(paste("Limite superior: ", upper_limit))
+print(paste("Limite inferior: ", lower_limit))
+```
+
+El intervalo de confianza para un nivel de confiabilidad del 98% es:
+$$
+172.15328892576 < \mu < 176.84671107424
+$$
+
+## Inciso b
+Si estimamos que $\mu=174.5$ y utilizamos el intervalo de confianza creado con una confiabilidad del 98%, podemos decir que a lo sumo el error por encima de nuestra estimación estará por debajo de 176.84671107424; mientras que, a lo sumo nuestro error por debajo de nuestra estimación estará por encima de 172.15328892576
+
+# Ejercicio 9.37
+Extraemos los datos sobre el metal eliminado con/sin tratamiento.
+$$
+A: Encurtido\ sin\ tratamiento \\
+n_A = 100,\ \overline{X}_A = 12.2,\ s_A = 1.1 \\
+B: Encurtido\ con\ tratamiento \\
+n_B = 200,\ \overline{X}_B = 9.1,\ s_B = 0.9 
+$$
+
+Calculamos el intervalo de confianza para una confiabilidad de 98% sobre $\mu_A - \mu_B$.
+```{r}
+n_A = 100
+sample_mean_A = 12.2
+sample_deviation_A = 1.1
+n_B = 200
+sample_mean_B = 9.1
+sample_deviation_B = 0.9
+
+diff_sample_means = sample_mean_A - sample_mean_B
+diff_sample_deviations = sqrt(((1.1**2)/n_A) + ((0.9**2)/n_B))
+
+upper_limit = diff_sample_means + qnorm(p = 0.02/2, lower.tail = FALSE) * diff_sample_deviations
+lower_limit = diff_sample_means - qnorm(p = 0.02/2, lower.tail = FALSE) * diff_sample_deviations
+print(paste("Limite superior: ", upper_limit))
+print(paste("Limite inferior: ", lower_limit))
+```
+
+El intervalo quedaría:
+$$
+2.80436154671368 < \mu_A - \mu_B < 3.39563845328632
+$$
+
+Podemos ver que la cantidad de metal eliminado en promedio del encurtido sin tratamiento, con respecto al con tratamiento, se sitúa entre 2.80 y 3.39 milimetros de metal eliminados más; por lo tanto, tenemos evidencia para decir que el tratamiento parece reducir la cantidad media de metal eliminado.
+
+# Ejercicio 9.42
+Extraemos los datos.
+$$
+n_v = 12,\ \overline{X}_v = 16,\ \sigma_v = 1 \\
+n_t = 10,\ \overline{X}_t = 11,\ \sigma_t = 0.8
+$$
+
+```{r}
+n_v = 12
+sample_mean_v = 16
+population_deviation_v = 1
+n_t = 10
+sample_mean_t = 11
+population_deviation_t = 0.8
+```
+
+Empezamos con el proceso de diferencias:
+```{r}
+diff_sample_means_cars = sample_mean_v - sample_mean_t
+diff_sample_deviations_cars = sqrt(((population_deviation_v**2)/n_v) + ((population_deviation_t**2)/n_t))
+
+```
+
+> A este ejercicio le falta el cálculo de los límites.

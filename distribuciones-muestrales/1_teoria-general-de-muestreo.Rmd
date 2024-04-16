@@ -1,0 +1,14 @@
+---
+title: "Teoría General de Muestreo"
+output: 
+  html_notebook: 
+    toc: yes
+---
+
+# Muestra
+Subconjunto representativo de la población. Con representativo debemos tener en cuenta cosas como la forma en que se eligieron o la cantidad de elementos que se tomaron.
+
+# Tipos de Muestreo
++ **Muestreo Estratificado:** Usamos esto cuando sabemos que nuestra población está conformada por ciertas categorías, por eso usamos este muestreo para intentar mantener la proporción de elementos de cada una de las categorías en la muestra.
++ **Muestreo por Conglomerados:** Cuando tenemos dificultades para hacer el muestreo en una población, miramos las agrupaciones en las que ya se separa la población y tomamos aleatoriamente algunas de esas agrupaciones y todos los elementos que pertenezcan a ellos.
++ **Muestreo Multi-Etápico:** En este muestreo utilizamos varias fases de selección para ir delimitando los elementos de nuestra muestra. Las fases de selección van a estar definidas por características propias que podamos observar en la población.

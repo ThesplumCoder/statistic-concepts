@@ -1,0 +1,23 @@
+---
+title: "Distribuciones Muestrales"
+output: 
+  html_notebook: 
+    toc: yes
+---
+
+# Distribución muestral de proporciones
+Se hace mención a la distribución de Binomial, que se define como:
+$$P_{(x=k)}=\binom{n}{k}p^kq^{n-k}$$
+Pero si tenemos que $n>30, np>5, nq>5$ podemos hacer la aproximación normal:
+$$N(\mu_p=p, \sigma_p=\sqrt{\frac{pq}{n}})$$
+**Ejemplo:** Calcular la probabilidad de que en 120 lanzamientos de una moneda legal: a) entre 40% y 50% sean caras o bien, b) $\frac{5}{8}$ o más sean caras.
+Los 120 lanzamientos de la moneda se consideran como una muestra de la población infinita de todos los posibles lanzamientos de la moneda. En esta población la probabilidad de cara es $p=0.5$ y la probabilidad de cruz es $q=1-p=0.5$.
+a) Hacemos la aproximación normal:
+$$
+N(0.5,\sqrt{\frac{0.5^2}{120}}) \\
+N(0.5,0.04564)
+$$
+Sacamos el intervalo de 0.4 hasta 0.6:
+$$
+P(0.4<x<0.6)=N(0.6)-N(0.4)
+$$

@@ -1,0 +1,39 @@
+---
+title: "Prueba de Hipótesis"
+output:
+  html_document: 
+    toc: true
+---
+
+# Potencia
+
+Es la probabilidad de rechazar $H_o$ dado que la alternativa $H_a$ es la verdadera.
+
+
+```{r}
+curve(dnorm(x, mean = 68, sd = 3.6/sqrt(36)), col = "red", from = 65, to = 71)
+abline(v = 67)
+abline(v = 69)
+```
+
+```{r}
+significance = 2 * pnorm(q = 67, mean = 68, sd = 3.6/sqrt(36), lower.tail = TRUE)
+print(paste("Nivel de significancia: ", significance))
+```
+
+Calcular la potencia de la prueba.
+```{r}
+curve(dnorm(x, mean = 68, sd = 3.6/sqrt(36)), col = "red", from = 65, to = 71)
+curve(dnorm(x, mean = 68.5, sd = 3.6/sqrt(36)), col = "blue", add = TRUE)
+abline(v = 67)
+abline(v = 69)
+```
+
+```{r}
+beta = pnorm(q = 69, mean = 68.5, sd = 3.6/sqrt(36), lower.tail = TRUE) - pnorm(q = 67, mean = 68.5, sd = 3.6/sqrt(36), lower.tail = TRUE)
+
+power_test = 1 - beta
+print(paste("Nivel de potencia: ", power_test))
+```
+
+
