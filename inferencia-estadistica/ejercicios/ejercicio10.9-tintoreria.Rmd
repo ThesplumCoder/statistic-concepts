@@ -1,0 +1,80 @@
+---
+title: "Ejercicio 10.9"
+output:
+  html_document: 
+    toc: true
+---
+
+Una tintorería afirma que un nuevo removedor de manchas quitará más de 70% de las manchas en las que se aplique. Para verificar esta afirmación el removedor de manchas se utilizará sobre 12 manchas elegidas al azar. Si se eliminan menos de 11 de las manchas, no se rechazará la hipótesis nula de que $p = 0.7$; de otra manera, concluiremos que $p > 0.7$.
+
+a. Evalúe $\alpha$, suponiendo que $p = 0.7$.
+b. Evalúe $\beta$ para la alternativa $p = 0.9$.
+
+**Recuerde:** La distribución binomial se tiene que:
+$$
+P(x) = \binom n x p^x (1 - p)^{n - x},\ para\ x = 0,1,2,...,n \\
+\binom n x = \frac{n!}{x!(n - x)!}
+$$
+
+**Solución:** 
+
+Definimos las hipótesis:
+$$
+H_0: p = 0.7 \\
+H_1: p > 0.7
+$$
+```{r}
+eliminated_stains = 11;
+h0 = 0.7
+
+plot(dbinom(1:12, size = 12, prob = h0), col = 'blue', main = "Distribución binomial con p = 0.7", xlab = "Manchas eliminadas", ylab = "Masa de probabilidad")
+lines(1:10, dbinom(1:10, size = 12, prob = h0), type = "h", col = 'red')
+
+prob_eliminated_stains = pbinom(q = 10, size = 12, prob = h0)
+significance = 1 - prob_eliminated_stains
+```
+
+La probabilidad de que menos de 11 manchas sean eliminadas es $P(X < 11) = `r prob_eliminated_stains`$; por lo tanto, nuestro nivel significancia sería $\alpha =  `r significance`$.
+
+Ahora definimos que nuestra hipótesis nula es falsa y que en realidad $p = 0.9$, entonces:
+```{r}
+real_p = 0.9
+
+plot(dbinom(1:12, size = 12, prob = real_p), col = 'red', main = "Distribuciones binomiales", xlab = "Manchas eliminadas", ylab = "Masa de probabilidad")
+lines(dbinom(1:12, size = 12, prob = h0), type = 'p', col = 'blue')
+lines(dbinom(1:10, size = 12, prob = real_p), type = 'h', col = 'green')
+legend(x = "topleft", legend = c("p = 0.7", "p = 0.9"), lty = c(3, 3), col = c('blue', 'red'))
+```
+
+```{r}
+beta = pbinom(q = 10, size = 12, prob = real_p)
+```
+
+Tenemos que $\beta = `r beta`$ si $p = 0.9$.
+
+Si el número de manchas es 100 y que la región crítica es $x > 82$ con $x$ siendo el número de manchas eliminadas, definimos los siguiente:
+$$
+H_0: p = 0.7 \\
+H_1: p > 0.7
+$$
+
+Utilizamos la aproximación a la distribución normal:
+```{r}
+stains = 100
+eliminated_stains = 82
+p_0 = 0.7
+
+p_hat = eliminated_stains / stains
+
+mean_p_hat = p_0
+deviation_p_hat = sqrt(p_0 * (1 - p_0) / stains)
+
+statistic_z_prop = (p_hat - mean_p_hat) / deviation_p_hat
+critic_value = qnorm(pbinom(q = 82, size = 100, prob = p_0, lower.tail = FALSE), mean = mean_p_hat, sd = deviation_p_hat, lower.tail = FALSE)
+
+curve(dnorm(x, mean = mean_p_hat, sd = deviation_p_hat), from = 0, to = 1, col = "blue", main = "Aproximación normal a la binomial", xlab = "Parámetro p", ylab = "Densidad de probabilidad")
+abline(v = critic_value, lty = 2)
+abline(v = p_hat, col = "red")
+```
+
+*Conclusión:* No se puede rechazar la hipótesis nula de que el nuevo removedor de manchas quitará más del 70% de las manchas a las que se aplique.
