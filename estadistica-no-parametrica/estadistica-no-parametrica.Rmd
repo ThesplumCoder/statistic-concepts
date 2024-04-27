@@ -1,0 +1,54 @@
+---
+title: "Estadística no Paramétrica"
+output:
+  html_document: 
+    toc: true
+---
+
+# Concepto
+
+Este tipo de estadística se utiliza pruebas no paramétricas o de distribución 
+libre.
+
+Algunas desventajas son:
+
++ Son menos eficientes que las pruebas paramétricas equivalentes.
++ Tiene menor potencia de discriminación, es decir, menor $1 - \beta$.
++ No utilizan la función completa de la muestra.
+
+# Prueba del Signo
+
+Las condiciones son:
+
++ El número de muestras es menor a 30.
++ La población no es normal.
++ El parámetro a evaluar es la mediana $\tilde{\mu}$.
+
+## Procedimiento
+
+1. Definimos el valor de mediana para la hipótesis nula.
+2. Buscamos ese valor en el conjunto de datos. Si aparece más de una vez debemos 
+retirar los demás y dejar solo una aparición.
+3. Ordenamos los datos.
+4. Hacemos el conteo de cuántos datos están por encima y por debajo del valor de 
+nuestra hipótesis nula.
+5. Quitamos el dato de la mediana y hacemos el conteo de datos totales $n$.
+6. Utilizamos la distribución binomial así $bin(x,n, p = 0.5)$.
+    + $x$: Cantidad de datos a alguno de los lados de la mediana.
+    + $n$: Cantidad de datos de la muestra sin la mediana.
+    + $p = 0.5$.
+7. Calculamos el $P_{valor}$ para el valor más pequeño entre las cantidades de 
+datos a cada lado de la mediana.
+8. Rechazamos o aceptamos la hipótesis nula en base a la comparación del valor 
+de significancia con el $P_{valor}$.
+
+**Ejemplos:**
+
+[Horas de operación de una desbrozadora](./ejercicios/horas-desbrozadora_prueba-de-signo.Rmd)
+
+Esta prueba también se puede utilizar para datos pareados.
+
+# Prueba de rangos con signo de Wilcoxon
+
+Esta prueba sirve para tratar en alguna medida la información de distancia entre 
+los datos. Se realiza igualmente sobre la mediana $\tilde{\mu}$.

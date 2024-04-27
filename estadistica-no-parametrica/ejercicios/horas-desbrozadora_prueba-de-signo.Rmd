@@ -1,0 +1,54 @@
+---
+title: "Horas de Operación de una Desbrozadora"
+output:
+  html_document: 
+    toc: true
+---
+
+# Definición
+
+Los siguientes datos representan el número de horas que funciona una 
+desbrozadora antes de requerir una recarga:
+```{r}
+hours = c(1.5, 2.2, 0.9, 1.3, 2.0, 1.6, 1.8, 1.5, 2.0, 1.2, 1.7)
+significance = 0.05
+h0 = 1.8
+```
+A un nivel de significancia de 0.05 utilice la prueba de signo para probar la 
+hipótesis de que esta desbrozadora específica funciona con una mediana de 1.8 
+horas antes de requerir una recarga.
+
+# Solución
+
+Planteamos las hipótesis:
+$$
+H_0: \tilde{\mu} = 1.8 \\
+H_1: \tilde{\mu} \neq 1.8
+$$
+
+```{r}
+ordered_hours = sort(hours)
+plot(x = ordered_hours, main = "Ubicación de los datos ordenados", xlab = "Orden", ylab = "Horas de operación")
+abline(h = h0, col = "blue", lty = 2)
+```
+
+
+```{r}
+minimum_values_per_side = 0
+maximum_values_per_side = 10
+
+plot(0:10, dbinom(0:10, size = 10, prob = 0.5), type = "h", col = "blue", main = "Distribución binomial de la cantidad de datos ideal a cada lado de la mediana", xlab = "Cantidad de datos", ylab = "Densidad de probabilidad")
+```
+
+En estos casos es mejor comparar el nivel de significancia de la prueba con el 
+$P_{valor}$, así podremos comparar los dos valores reales y ver si hemos 
+superado el umbral para nuestros datos. Como tenemos que hay 3 valores por 
+encima de nuestro valor de mediana de la hipótesis nula, entonces calculamos el 
+$P_{valor}$ para rechazar nuestra hipótesis con esos 3 valores por un lado de la 
+mediana:
+```{r}
+p_value = pbinom(q = 3, size = 10, prob = .5) * 2
+```
+
+Como $\alpha = `r significance` < P_{valor} = `r p_value`$ entonces no 
+rechazamos la prueba.

@@ -1,0 +1,27 @@
+---
+title: "Empresa de Taxis - Prueba de Signo con Datos Pareados"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Definición
+
+Una empresa de taxis intenta decidir si utilizar neumáticos radiales en vez de 
+los neumáticos regulares con cinturón le serviría para ahorrar combustible. Se 
+equipan 16 automóviles con neumáticos radiales y se conducen por un recorrido de 
+prueba establecido. Después se equipan los mismos automóviles con los neumáticos 
+regulares con cinturón y se hace que los mismos conductores vuelvan a realizar 
+el recorrido de prueba
+
+```{r}
+radial_consumption = c(4.2)
+```
+
+# Solución
+
+Se definen las hipótesis:
+$$
+H_0: \tilde{\mu}_{rad} - \tilde{\mu}_{cin} = 0\\
+H_1: \tilde{\mu}_{rad} - \tilde{\mu}_{cin} > 0
+$$
