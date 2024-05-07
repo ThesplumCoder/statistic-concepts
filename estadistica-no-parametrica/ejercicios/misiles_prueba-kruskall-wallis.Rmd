@@ -1,0 +1,54 @@
+---
+title: "misiles_prueba-kruskall-wallis"
+author: "Anderson Acuña"
+date: "2024-05-02"
+output: html_document
+---
+
+# Definición
+
+```{r}
+system_1 = c(24, 16.7, 22.8, 19.8, 18.9)
+system_2 = c(23.2, 19.8, 18.1, 17.6, 20.2, 17.8)
+system_3 = c(18.4, 19.1, 17.3, 17.3, 19.7, 18.9, 18.8, 19.3)
+```
+
+# Solución
+
+```{r}
+full_data = c(system_1, system_2, system_3)
+origin_system = c(seq(1, by = 0, length.out = length(system_1)),
+                  seq(2, by = 0, length.out = length(system_2)),
+                  seq(3, by = 0, length.out = length(system_3)))
+
+sorted_data_and_index = sort(full_data, index.return = TRUE)
+sorted_data = sorted_data_and_index$x
+origin_system = origin_system[sorted_data_and_index$ix]
+
+ranking = rank(sorted_data)
+```
+
+Sumamos los rangos de cada grupo:
+```{r}
+sum_rank_1 = sum(ranking[origin_system == 1])
+sum_rank_2 = sum(ranking[origin_system == 2])
+sum_rank_3 = sum(ranking[origin_system == 3])
+```
+
+Calculamos el estadístico $H$.
+```{r}
+ranks_systems = c(sum_rank_1, sum_rank_2, sum_rank_3)
+lengths = c(length(system_1), length(system_2), length(system_3))
+
+# Revisar esta ecuación
+H = (12 / length(sorted_data) * (length(sorted_data) + 1)) * sum(((ranks_systems ** 2) / lengths) - (3 * (length(sorted_data + 1)))) 
+```
+
+Calculamos nuestro valor crítico con la distribución Chi-cuadrado.
+```{r}
+critic_value = qchisq(p = 0.05, df = 2, lower.tail = FALSE)
+
+curve(dchisq(x, df = 2), from = 0, to = 10, col = "blue", ylim = c(0, 1))
+abline(v = critic_value, col = "red", lty = "dashed")
+```
+

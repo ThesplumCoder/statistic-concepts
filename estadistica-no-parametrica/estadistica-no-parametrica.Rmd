@@ -3,6 +3,7 @@ title: "Estadística no Paramétrica"
 output:
   html_document: 
     toc: true
+    number_sections: true
 ---
 
 # Concepto
@@ -42,13 +43,83 @@ datos a cada lado de la mediana.
 8. Rechazamos o aceptamos la hipótesis nula en base a la comparación del valor 
 de significancia con el $P_{valor}$.
 
-**Ejemplos:**
+Esta prueba también se puede utilizar para datos pareados.
+
+## Ejemplo
 
 [Horas de operación de una desbrozadora](./ejercicios/horas-desbrozadora_prueba-de-signo.Rmd)
-
-Esta prueba también se puede utilizar para datos pareados.
 
 # Prueba de rangos con signo de Wilcoxon
 
 Esta prueba sirve para tratar en alguna medida la información de distancia entre 
 los datos. Se realiza igualmente sobre la mediana $\tilde{\mu}$.
+
+# Prueba U de Mann-Whitney o de suma de rangos de Wilcoxon
+
+Esta prueba es utilizada cuando queremos comparar dos muestras independientes de 
+dos poblaciones, y saber si son significativamente diferentes. Es la prueba más 
+similar a la prueba t de dos muestras cuando hay condición de normalidad.
+
+Cuando se realiza la prueba podemos ver que no importan en sí los resultados de 
+los experimentos, sino el tamaño de las muestras y cómo estos se organizan en la 
+clasificación.
+
+En esta prueba se calcula la **contribución** de cada una de las muestras $w_n$ 
+para hacer los cálculos de los estadísticos:
+$$
+w_1 + w_2 = \frac{(n_1 + n_2)(n_1 + n_2 + 1)}{2} \\
+u_1 = w_1 - \frac{n_1(n_1 + 1)}{2} \\
+u_2 = w_2 - \frac{n_2(n_2 + 1)}{2}
+$$
+
+Una forma alternativa de calcular las contribuciones es suma los rangos 
+obtenidos por cada uno de los valores pertenecientes a las muestras.
+
+## Procedimiento
+
+1. Definimos qué queremos saber, si la mediana de la población 1 es menor, mayor o 
+diferente a la mediana de la población 2.
+2. Juntamos todos los datos de las muestras y los ordenamos de manera 
+ascendente.
+3. Los enumeramos de manera ascendente, si encontramos que hay valores repetidos 
+entonces calculamos la media de los valores que se les hubiera dado en la 
+enumeración si hubiesen sido diferentes.
+4. Buscamos los valores que pertenecen a la muestra 1 y los sumamos los valores 
+respectivos que obtuvieron en la enumeración. Esto se hace para obtener la 
+contribución de esa muestra, es decir, el valor de $w_1$. Hacemos lo mismo con 
+la muestra 2.
+5. Dependiendo si la prueba es de una o dos colas calculamos el estadístico $u$. 
+Si es de una cola será $u_1$ o $u_2$; mientras que, si es de dos colas será 
+$min(u_1, u_2)$.
+6. Buscamos el valor crítico $U_{critico}$ en la tabla de la distribución $U$. 
+Si nuestro valor de estadístico es mayor, no podemos rechazar la hipótesis nula; 
+por otro lado, si el estadístico es menor entonces tenemos suficiente evidencia 
+para rechazar la hipótesis nula (con ese $\alpha$).
+
+## Ejemplos
+
++ [Cantidad de nicotina en cigarrillos](./ejercicios/nicotina_en_cigarrillo_prueba_u_mann_whitney.Rmd)
+
+# Prueba de Kruskal-Wallis
+
+El objetivo de esta prueba, que se puede aplicar a varias muestras, es mirar 
+si al menos una de las muestras tiene diferencia significativa con respecto al 
+resto.
+
+Las hipótesis son:
+$$
+H_0: \tilde{\mu}_1 = \tilde{\mu}_2 =\ ...\ = \tilde{\mu}_n \\
+H_1: Al\ menos\ una\ es\ diferente
+$$
+
+El estadístico es $H$:
+$$
+H = \frac{12}{n(n + 1)} \sum^k_{i = 1} \frac{R^2_i}{n_i} - 3(n + 1)
+$$
+
+Se debe asegurar que al menos cada muestra constre de 5 elementos. La región de 
+rechazo se va a definir mediante una distribución Chi-cuadrado $\chi^2$.
+
+## Ejemplos
+
+[Misiles](./ejercicios/misiles_prueba-kruskall-wallis.Rmd)
